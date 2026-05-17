@@ -75,6 +75,15 @@ For a given portfolio of patents (entered as rows in a spreadsheet), the framewo
 - **18 thresholds made tunable** — previously hardcoded values are now cell references to the Configuration sheet.
 - **README extended** with v3 usage section.
 
+### v4 — Attribute derivation procedure
+- New **Attribute Procedure sheet** inserted between Attribute Dictionary and Patent Portfolio. Provides the field-by-field procedure for populating the 40 attributes from raw patent data: where to look it up in the patent record, how to derive or compute the value, and which database to use.
+- Sheet contains five sections: (1) Type legend explaining Direct lookup / Computed / Derived rubric / Derived rubric + SME categories, (2) 10-step recommended workflow table mapping each step to the fields it populates, (3) master per-attribute procedure table (40 rows × 7 columns: Group, Code, Attribute, Type, Where to find, How to derive, Best data source), (4) data source reference of 19 free and paid sources with URLs and what each gives you, (5) practical notes on calibration, time allocation, and automation pointers.
+- Group color coding matches the Patent Portfolio sheet for visual consistency. Freeze panes at the master table header so it stays visible while scrolling.
+- Companion artifact **Attribute_Derivation_Procedure.docx** carries the same content as a landscape Word doc for printing or sharing outside the workbook.
+- Companion artifact **Patent_Bundling_Framework_v3_Deck.pptx** — 14-slide client-meeting deck covering the v3 framework.
+- All v3 logic (Configuration, Presets, Bundle Assignment, Scorecard) preserved unchanged. 1,333 formulas, zero errors.
+- **README extended** with v4 addition section.
+
 ### Future / Planned
 - (Open) Optional Python helper script for one-command preset save/load.
 - (Open) Carve-in / carve-out flags on the Bundle Assignment sheet (currently documented strategy only).
@@ -86,13 +95,17 @@ For a given portfolio of patents (entered as rows in a spreadsheet), the framewo
 
 | File | Purpose |
 |---|---|
-| `Patent_Bundling_Template_v3.xlsx` | The active workbook. Always use the latest version. |
+| `Patent_Bundling_Template_v4.xlsx` | **The active workbook.** Always use the latest version. |
+| `Patent_Bundling_Template_v3.xlsx` | v3 — kept for reference; no Attribute Procedure sheet. |
 | `Patent_Bundling_Template_v2.xlsx` | v2 — kept for reference; does not have configurability. |
 | `Patent_Bundling_Template.xlsx` | v1 — original foundation; kept for reference. |
+| `Attribute_Derivation_Procedure.docx` | Printable Word doc with the same field-by-field procedure as the Attribute Procedure sheet in v4. Landscape format, 16–17 pages. |
+| `Patent_Bundling_Framework_v3_Deck.pptx` | 14-slide client-meeting deck covering the v3 framework. |
 | `DOCUMENTATION.md` | This document. Updated whenever features change. |
 | `build_template.py` | Source script for v1. |
 | `extend_template.py` | Source script for v2 (extends v1 to v2). |
 | `build_v3.py` | Source script for v3 (extends v2 to v3). |
+| `build_v4.py` | Source script for v4 (extends v3 to v4 by adding the Attribute Procedure sheet). |
 
 Build scripts are kept because they encode the exact construction logic — if you ever need to extend or modify the template programmatically, edit the appropriate script and rebuild.
 
@@ -180,7 +193,7 @@ For the **full routing rule, value proposition, and threshold details for each b
 
 ## Sheet-by-sheet reference
 
-The workbook contains 10 sheets in this order (v3):
+The workbook contains 11 sheets in this order (v4):
 
 ### 1. README
 The first sheet a new user lands on. Contains a project overview, color legend, sheet directory, and basic usage instructions. Updated at each version with an addendum section describing what's new.
@@ -196,37 +209,41 @@ Parameter × preset matrix. 6 starter presets + 4 empty Custom Preset slots.
 - **Read by:** Configuration sheet (via INDEX/MATCH)
 
 ### 4. Attribute Dictionary
-Authoritative list of all 42 attributes (A1–I4) with group, code, name, description, scale, and example value.
+Authoritative list of all 42 attributes (A1–I4) with group, code, name, description, scale, and example value. Use as a quick reference while data-entering on the Patent Portfolio sheet.
 - **Editable:** No — reference data.
 
-### 5. Patent Portfolio
+### 5. Attribute Procedure *(v4 — new)*
+Long-form derivation procedure for the 40 attributes. Tells you *where to find* each value in the patent record, *how to derive or compute* it (full 0–3 rubrics for scored fields), and the *best data source* to use. Five sections: type legend, 10-step recommended workflow, master per-attribute table, free/paid data source reference, and practical notes on calibration and effort allocation. Group color coding matches the Patent Portfolio sheet. Companion to the Attribute_Derivation_Procedure.docx file.
+- **Editable:** No — reference data.
+
+### 6. Patent Portfolio
 The master input sheet. One row per patent. 42 attribute columns across groups A–I.
 - **Editable cells:** every patent row, every attribute column
 - **Pre-populated:** 12 sample patents in rows 3–14
 - **Validation:** dropdowns on categorical fields (stack layer, claim type, prosecution status, etc.), integer-only 0–3 bounds on rating fields
 
-### 6. Bundle Rules
+### 7. Bundle Rules
 Documents all 33 bundle types with: number, name, value proposition, routing rule text, primary attributes used.
 - **Editable:** No — reference data. The actual routing logic lives in Bundle Assignment formulas.
 
-### 7. Bundle Assignment
+### 8. Bundle Assignment
 Auto-computed TRUE/FALSE matrix. One row per patent, one column per bundle, plus a Total column at the end (column AJ).
 - **All cells are formulas.** Do not edit.
 - **Disabled bundle columns** (v3): show `[DISABLED]` in row 2 header and are grayed out via conditional formatting. Cells return blanks instead of TRUE/FALSE.
 - **Color coding:** TRUE = green, FALSE = light red, disabled = gray.
 
-### 8. Bundle Quality Scorecard
+### 9. Bundle Quality Scorecard
 Auto-aggregated metrics per bundle. One row per bundle, columns for coverage depth, avg detectability, avg term, trilateral %, continuation %, SEP %, pioneer count, strength flag, and 5 gate metrics.
 - **All cells are formulas.** Do not edit.
 - **Disabled bundles** (v3): show `[DISABLED] <name>` in column B and gray out the whole row.
 - **Disabled gates** (v3): show `[DISABLED]` in the column header and gray out that column.
 - **Strength flag** (STRONG/MODERATE/WEAK) uses thresholds from Configuration.
 
-### 9. Sample Bundles
+### 10. Sample Bundles
 Three worked examples (5G SEP cluster, EV powertrain stack, edge AI convergence) showing how real bundles look.
 - **Editable:** No — illustrative.
 
-### 10. Bundle Composition Strategy
+### 11. Bundle Composition Strategy
 Reference documentation for the 10 compositional approaches (tiered, anchor-first, storyline, etc.) plus a pre-offering checklist.
 - **Editable:** No — reference data.
 
@@ -545,13 +562,14 @@ A **pre-offering checklist** is included on the same sheet — anchor presence, 
 
 ### Workflow 1 — Analyze a new portfolio
 
-1. Open `Patent_Bundling_Template_v3.xlsx`.
-2. Go to the **Patent Portfolio** sheet.
-3. Replace the 12 sample patents with your own data. Use the dropdowns where provided. Score every attribute you have data for; leave blanks where unknown.
-4. Add more rows as needed (copy formulas-and-formatting from row 14 downward).
-5. Go to **Bundle Assignment** — review which bundles each patent qualifies for.
-6. Go to **Bundle Quality Scorecard** — review aggregate quality metrics per bundle. Look for STRONG flags and high EoU-ready / Survived percentages.
-7. Iterate: refine attribute scores, merge small bundles, split large ones.
+1. Open `Patent_Bundling_Template_v4.xlsx`.
+2. Open the **Attribute Procedure** sheet first if you're not sure how to score the attributes. The 10-step workflow table at the top tells you which order to populate fields in; the master table below tells you where to look up each field and how to score it.
+3. Go to the **Patent Portfolio** sheet.
+4. Replace the 12 sample patents with your own data. Use the dropdowns where provided. Score every attribute you have data for; leave blanks where unknown. Use the Attribute Dictionary as a quick reference for scales/values; switch to the Attribute Procedure sheet for the full how-to.
+5. Add more rows as needed (copy formulas-and-formatting from row 14 downward).
+6. Go to **Bundle Assignment** — review which bundles each patent qualifies for.
+7. Go to **Bundle Quality Scorecard** — review aggregate quality metrics per bundle. Look for STRONG flags and high EoU-ready / Survived percentages.
+8. Iterate: refine attribute scores, merge small bundles, split large ones.
 
 ### Workflow 2 — Configure for a specific buyer
 
@@ -591,9 +609,10 @@ This requires editing the build scripts and regenerating the workbook. Outline:
 1. Edit `build_template.py` (or the most recent build script).
 2. Add the new attribute to the relevant group's headers and the Attribute Dictionary block.
 3. Update any downstream routing rules in Bundle Assignment that should reference the new attribute.
-4. Run the build script chain (`build_template.py` → `extend_template.py` → `build_v3.py`).
-5. Run the recalc script to verify zero formula errors.
-6. Update this documentation accordingly.
+4. Add a row to the Attribute Procedure sheet (in `build_v4.py`) documenting where to find / how to derive / data source for the new attribute.
+5. Run the build script chain (`build_template.py` → `extend_template.py` → `build_v3.py` → `build_v4.py`).
+6. Run the recalc script to verify zero formula errors.
+7. Update this documentation accordingly.
 
 ### Workflow 6 — Add a new bundle type
 
@@ -678,4 +697,4 @@ If you open the file and bundle assignment looks stale:
 
 ---
 
-*Document maintained alongside `Patent_Bundling_Template_v3.xlsx`. Last updated for v3 — Pattern A configurability release.*
+*Document maintained alongside `Patent_Bundling_Template_v4.xlsx`. Last updated for v4 — Attribute Derivation Procedure release.*
